@@ -1,5 +1,6 @@
 package com.picpaybackend.picpaybackend.Entities;
 
+import com.picpaybackend.picpaybackend.dtos.User.UserCreateDTO;
 import com.picpaybackend.picpaybackend.enums.UserType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -31,5 +32,18 @@ public class User {
     private BigDecimal balance;
     @Enumerated(EnumType.STRING)
     private UserType type;
+
+
+
+
+    public User(UserCreateDTO dados){
+        this.fistname = dados.firstName();
+        this.lastname = dados.lastName();
+        this.document = dados.document();
+        this.balance = dados.balance();
+        this.type = dados.userType();
+        this.password = dados.password();
+        this.email = dados.email();
+    }
 
 }
