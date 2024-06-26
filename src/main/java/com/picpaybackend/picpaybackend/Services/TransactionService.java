@@ -24,7 +24,7 @@ public class TransactionService {
     @Autowired
     private TransactionRepository repository;
 
-    //Para fazer chamas Http externas.
+    //Para fazer chamadas Http externas.
     @Autowired
     private RestTemplate restTemplate;
 
