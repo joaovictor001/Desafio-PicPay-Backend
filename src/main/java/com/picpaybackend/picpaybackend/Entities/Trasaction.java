@@ -1,5 +1,6 @@
 package com.picpaybackend.picpaybackend.Entities;
 
+import com.picpaybackend.picpaybackend.dtos.Trasaction.TrasactionCreateDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,9 +24,9 @@ public class Trasaction {
     @JoinColumn(name = "sender_id")
     private User sender;
     @ManyToOne
-    @JoinColumn(name = "sender_id")
-    private User reciver;
-
+    @JoinColumn(name = "receiver_id")
+    private User receiver;
     private LocalDateTime timestamp;
+
 
 }
