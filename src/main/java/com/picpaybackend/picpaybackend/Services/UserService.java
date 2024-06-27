@@ -5,9 +5,13 @@ import com.picpaybackend.picpaybackend.dtos.User.UserCreateDTO;
 import com.picpaybackend.picpaybackend.enums.UserType;
 import com.picpaybackend.picpaybackend.repository.UserReposity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+@Service
 
 public class UserService {
     @Autowired
@@ -34,8 +38,9 @@ public class UserService {
 
     }
 
-    public List<User> getAllUsers(){
-        this.reposity.findAll();
+    public ResponseEntity<List<User>> getAllUsers(){
+        List<User> users = this.reposity.findAll();
+        return  new ResponseEntity<>(users, HttpStatus.OK);
     }
     public void saveUser(User user){
         this.reposity.save(user);

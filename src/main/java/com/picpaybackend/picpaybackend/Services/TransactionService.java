@@ -28,19 +28,23 @@ public class TransactionService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private  NotificationService notificationService;
+
     @Value("service-endpoint")
     private String picpayService;
 
 
 
-    public void createTransaction(TrasactionCreateDTO dados) throws Exception {
+    public Trasaction createTransaction(TrasactionCreateDTO dados) throws Exception {
         User sender = this.userService.findUserById(dados.senderId());
         User receiver = this.userService.findUserById(dados.receiverId());
 
         userService.validateTrasaction(sender,dados.value());
 
-        boolean isAuthorized = this.authorizeTransaction(sender,dados.value());
-        if(!isAuthorized){
+        boolean isAuthorized = this.authorizeTransaction();
+        System.out.println(isAuthorized);
+        if(isAuthorized){
             throw new Exception("Transação não autorizada");
         }
 
@@ -59,15 +63,21 @@ public class TransactionService {
         this.userService.saveUser(sender);
         this.userService.saveUser(receiver);
 
+        this.notificationService.sendNotification(sender,"Trasação realizada com sucesso");
+        this.notificationService.sendNotification(receiver,"Trasação recebida com sucesso");
+
+        return trasaction;
+
     }
-    public boolean authorizeTransaction(User  sender, BigDecimal value){
-        ResponseEntity<Map> AuthorizationResponse= restTemplate.getForEntity(picpayService, Map.class);
+    public boolean authorizeTransaction(){
+        ResponseEntity<Map> AuthorizationResponse = restTemplate.getForEntity("https://util.devi.tools/api/v2/authorize", Map.class);
 
         if(AuthorizationResponse.getStatusCode() == HttpStatus.OK){
             String mensage =(String) AuthorizationResponse.getBody().get("message");
             return "Autorizado".equalsIgnoreCase(mensage);
+        }else {
+            return false;
         }
-        return false;
     }
 
 }
